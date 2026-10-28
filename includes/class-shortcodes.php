@@ -134,11 +134,9 @@ class OS_Product_Gallery_Shortcodes {
 				<?php echo self::render_items( $query ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside render_items(). ?>
 			</div>
 
-			<div class="ospg__footer">
-				<nav class="ospg__pagination" aria-label="<?php esc_attr_e( 'Gallery pagination', 'os-product-gallery' ); ?>">
-					<?php echo self::render_pagination( 1, $query->max_num_pages ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside render_pagination(). ?>
-				</nav>
-			</div>
+			<nav class="ospg__pagination" aria-label="<?php esc_attr_e( 'Gallery pagination', 'os-product-gallery' ); ?>">
+				<?php echo self::render_pagination( 1, $query->max_num_pages ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside render_pagination(). ?>
+			</nav>
 		</div>
 		<?php
 		return ob_get_clean();
