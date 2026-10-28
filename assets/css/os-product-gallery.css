@@ -78,12 +78,29 @@
 	transition: opacity 0.25s ease;
 }
 
-.ospg--cols-1 .ospg__grid { grid-template-columns: 1fr; }
-.ospg--cols-2 .ospg__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.ospg--cols-3 .ospg__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.ospg--cols-4 .ospg__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.ospg--cols-5 .ospg__grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-.ospg--cols-6 .ospg__grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.ospg--cols-1 .ospg__grid {
+	grid-template-columns: 1fr;
+}
+
+.ospg--cols-2 .ospg__grid {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ospg--cols-3 .ospg__grid {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ospg--cols-4 .ospg__grid {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ospg--cols-5 .ospg__grid {
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.ospg--cols-6 .ospg__grid {
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+}
 
 .ospg.is-loading .ospg__grid {
 	opacity: 0.5;
@@ -381,21 +398,6 @@ body.ospg-popup-open {
 	margin: 16px 0 8px;
 }
 
-.ospg-popup__desc {
-	color: #6b7280;
-}
-
-.ospg-popup__video {
-	margin-top: 16px;
-}
-
-.ospg-popup__video video,
-.ospg-popup__video iframe {
-	width: 100%;
-	max-width: 100%;
-	aspect-ratio: 16 / 9;
-}
-
 .ospg-popup.is-loading .ospg-popup__media::after {
 	content: "";
 	display: inline-block;
@@ -417,6 +419,7 @@ body.ospg-popup-open {
 /* ---------- Responsive ---------- */
 
 @media (max-width: 991px) {
+
 	.ospg--cols-3 .ospg__grid,
 	.ospg--cols-4 .ospg__grid,
 	.ospg--cols-5 .ospg__grid,

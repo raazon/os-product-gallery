@@ -1,78 +1,78 @@
-( function ( $ ) {
+(function ($) {
 	'use strict';
 
-	$( function () {
-		const $field = $( '.ospg-gallery-field' );
+	$(function () {
+		const $field = $('.ospg-gallery-field');
 
-		if ( ! $field.length || 'undefined' === typeof wp || ! wp.media ) {
+		if (!$field.length || 'undefined' === typeof wp || !wp.media) {
 			return;
 		}
 
 		const strings = window.ospgAdmin || {};
-		const $input = $field.find( '.ospg-gallery-ids' );
-		const $list = $field.find( '.ospg-gallery-list' );
+		const $input = $field.find('.ospg-gallery-ids');
+		const $list = $field.find('.ospg-gallery-list');
 		let frame = null;
 
 		const sync = () => {
 			const ids = [];
 
-			$list.find( 'li' ).each( function () {
-				ids.push( $( this ).attr( 'data-id' ) );
-			} );
+			$list.find('li').each(function () {
+				ids.push($(this).attr('data-id'));
+			});
 
-			$input.val( ids.join( ',' ) );
+			$input.val(ids.join(','));
 		};
 
-		$list.sortable( { update: sync } );
+		$list.sortable({ update: sync });
 
-		$field.on( 'click', '.ospg-gallery-add', function ( event ) {
+		$field.on('click', '.ospg-gallery-add', function (event) {
 			event.preventDefault();
 
-			if ( ! frame ) {
-				frame = wp.media( {
+			if (!frame) {
+				frame = wp.media({
 					title: strings.title,
 					button: { text: strings.button },
 					library: { type: 'image' },
 					multiple: 'add',
-				} );
+				});
 
-				frame.on( 'select', function () {
+				frame.on('select', function () {
 					frame
 						.state()
-						.get( 'selection' )
-						.each( function ( attachment ) {
+						.get('selection')
+						.each(function (attachment) {
 							const data = attachment.toJSON();
 
-							if ( $list.find( 'li[data-id="' + data.id + '"]' ).length ) {
+							if ($list.find('li[data-id="' + data.id + '"]').length) {
 								return;
 							}
 
 							const url = data.sizes && data.sizes.thumbnail ? data.sizes.thumbnail.url : data.url;
 
 							$list.append(
-								$( '<li/>', { 'data-id': data.id } )
-									.append( $( '<img/>', { src: url, alt: '' } ) )
+								$('<li/>', { 'data-id': data.id })
+									.append($('<img/>', { src: url, alt: '' }))
 									.append(
-										$( '<button/>', {
+										$('<button/>', {
 											type: 'button',
 											class: 'ospg-gallery-remove',
 											'aria-label': strings.remove,
 											text: '\u00d7',
-										} )
+										})
 									)
 							);
-						} );
+						});
 
 					sync();
-				} );
+				});
 			}
 
 			frame.open();
-		} );
+		});
 
-		$field.on( 'click', '.ospg-gallery-remove', function () {
-			$( this ).closest( 'li' ).remove();
+		$field.on('click', '.ospg-gallery-remove', function () {
+			$(this).closest('li').remove();
 			sync();
-		} );
-	} );
-} )( jQuery );
+		});
+	});
+})(jQuery);
