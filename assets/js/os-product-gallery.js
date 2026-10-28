@@ -3,6 +3,7 @@
 
 	var settings = window.ospgData || {};
 	var i18n = settings.i18n || {};
+	var hoverCache = {};
 
 	/**
 	 * POST to admin-ajax.php.
@@ -18,6 +19,29 @@
 			dataType: 'json',
 			data: $.extend( { action: action, nonce: settings.nonce }, data ),
 		} );
+	}
+
+	/**
+	 * Get the hover image for a product. One request per product, cached
+	 * (including the "no second image" result).
+	 *
+	 * @param {string} id Product ID.
+	 * @return {Promise} Resolves with {url, alt} or null.
+	 */
+	function getHoverImage( id ) {
+		if ( ! hoverCache[ id ] ) {
+			hoverCache[ id ] = request( 'ospg_get_hover_image', { product_id: id } ).then(
+				function ( response ) {
+					return response && response.success && response.data.url ? response.data : null;
+				},
+				function () {
+					delete hoverCache[ id ]; // Allow a retry after a network error.
+					return $.Deferred().resolve( null ).promise();
+				}
+			);
+		}
+
+		return hoverCache[ id ];
 	}
 
 	/* ------------------------------------------------------------------
@@ -421,6 +445,42 @@
 
 		$galleries.each( function () {
 			new Gallery( $( this ), lightbox );
+		} );
+	} );
+
+	/* ------------------------------------------------------------------
+	 * Hover: show the product's second image
+	 * ---------------------------------------------------------------- */
+	$( document ).on( 'mouseenter focusin', '.ospg .ospg-item', function () {
+		var $item = $( this );
+		var $media = $item.find( '.ospg-item__media' );
+		var id = $item.find( '.ospg-item__link' ).attr( 'data-product-id' );
+
+		// Only check once per rendered card.
+		if ( ! id || $item.data( 'ospgHover' ) ) {
+			return;
+		}
+
+		$item.data( 'ospgHover', true );
+
+		getHoverImage( id ).then( function ( image ) {
+			if ( ! image ) {
+				return; // No second image: do nothing.
+			}
+
+			// Preload so the card never shows a half-loaded image.
+			var preload = new Image();
+
+			preload.onload = function () {
+				$( '<img/>', {
+					class: 'ospg-item__hover',
+					src: image.url,
+					alt: image.alt || '',
+					'aria-hidden': 'true',
+				} ).appendTo( $media );
+			};
+
+			preload.src = image.url;
 		} );
 	} );
 } )( jQuery );
